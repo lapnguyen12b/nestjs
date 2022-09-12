@@ -8,5 +8,4 @@ export class LoggerMiddleware implements NestMiddleware {
     console.log(`Request ... ${req.method} - ${domain}${req.url}`)
     next()
   }
-
 }

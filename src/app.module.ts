@@ -6,7 +6,7 @@ import { LoggerModule } from './logger/logger.module'
 import { LoggerMiddleware } from './logger/middleware'
 
 @Module({
-  imports: [CatsModule, LoggerModule],
+  imports: [LoggerModule, CatsModule],
   controllers: [AppController],
   providers: [AppService],
 })

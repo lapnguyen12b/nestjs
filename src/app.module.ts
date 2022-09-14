@@ -1,6 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { env } from 'process'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { CatsModule } from './cats/cats.module'

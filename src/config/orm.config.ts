@@ -1,20 +1,20 @@
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import * as path from 'path';
-import { env } from './env.config';
+import { ConnectionOptions } from 'typeorm';
 
-const rootDir = path.join(__dirname, '..', '..')
-const configDB: TypeOrmModuleOptions = {
+const configDB: ConnectionOptions = {
   type: 'postgres',
   host: 'localhost',
-  port: '5432',
+  port: 5432,
   username: 'postgres',
   password: '123456',
   database: 'nestjsDB',
-  entities: [rootDir + '/dist/**/*.entity.js'],
-  migrations: [rootDir + '/dist/migration/**/*.js'],
-      cli: {
-        migrationsDir: ['src/migration'],
-      },
-  synchronize: true,
-} as any
+  entities: [__dirname + '/**/*.entity{.ts,.js}'],
+  synchronize: false,
+  migrationsRun: true,
+  logging: true,
+  logger: 'file',
+  migrations: [__dirname + '/migrations/*.js'],
+  cli: {
+    migrationsDir: 'src/migrations',
+  },
+}
 export = configDB

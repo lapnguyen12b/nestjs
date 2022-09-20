@@ -7,7 +7,7 @@ const configDB: ConnectionOptions = {
   username: 'postgres',
   password: '123456',
   database: 'nestjsDB',
-  entities: [__dirname + '/**/*.entity{.ts,.js}'],
+  entities: [__dirname + '/../**/*.entity.js'],
   synchronize: false,
   migrationsRun: true,
   logging: true,

@@ -8,6 +8,7 @@ async function bootstrap() {
   //using Global middleware
   app.use(logger)
   await app.listen(process.env.PORT || 3000, () => {
+    console.log('Server is running ...');
     console.log(env.DOMAN_BE)
   });
 }

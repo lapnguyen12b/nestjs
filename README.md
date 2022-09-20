@@ -46,3 +46,11 @@ npm run typeorm migration:run
 - maintenance database: nestjsDB
 - username: postgres
 - password: 123456
+
+### Migration
+```
+npm run typeorm migration:generate -- -n <name>
+npm run typeorm migration:create -- -n <name>
+npm run typeorm migration:run
+npm run typeorm migration:revert
+```

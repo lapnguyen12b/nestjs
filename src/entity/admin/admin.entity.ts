@@ -2,7 +2,7 @@ import { STATUS } from 'src/enums/status.enum';
 import { Column, Entity } from 'typeorm';
 import { BaseColumn } from '../base';
 
-@Entity('admin')
+@Entity()
 export class Admin extends BaseColumn {
   constructor(data?: Partial<Admin>) {
     super()

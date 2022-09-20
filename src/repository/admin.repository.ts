@@ -1,8 +1,9 @@
 import { Admin } from 'src/entity/admin';
-import { Repository } from 'typeorm';
+import { EntityRepository, Repository } from 'typeorm';
 
+@EntityRepository(Admin)
 export class AdminRepository extends Repository<Admin> {
-  async getAdmins(): Promise<Admin[]> {
-    return this.find()
+  async getAdminByEmail(email: string): Promise<Admin | undefined> {
+    return this.findOne({email: email})
   }
 }

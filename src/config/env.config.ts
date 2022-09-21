@@ -10,6 +10,7 @@ export const env = {
   POSTGRES_DB: process.env.POSTGRES_DB || 'nestjsDB',
   DOMAN_BE: process.env.DOMAN_BE,
   ROOT_PATH: path.join(__dirname, '..'),
-  ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET || 'jsonwedtoken'
+  ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET || 'jsonwedtoken',
+  REFRESH_TOKEN_SECRET: process.env.REFRESH_TOKEN_SECRET || 'testToken'
 }
 

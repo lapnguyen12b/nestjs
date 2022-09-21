@@ -6,13 +6,17 @@ import { LoggerModule } from './logger/logger.module'
 import { LoggerMiddleware } from './logger/middleware'
 import { AdminModule } from './admin/admin.module';
 import { dataBaseConfig } from './config/database.config'
+import { CoreModule } from './core/core.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     dataBaseConfig,
     CatsModule,
     LoggerModule,
-    AdminModule
+    AdminModule,
+    CoreModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],

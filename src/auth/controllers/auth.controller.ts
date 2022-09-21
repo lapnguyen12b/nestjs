@@ -1,7 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { SerializeAdminToken } from 'src/admin/decorators';
 import { AdminLoginDto, AdminSigninDto, AdminSignupDto } from 'src/admin/dto';
-import { JwtAuthGuard } from 'src/core/guards';
 import { Admin } from 'src/entity/admin';
 import { AuthService } from '../services';
 

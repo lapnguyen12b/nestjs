@@ -18,4 +18,13 @@ export class AdminService {
     admin.refreshToken = refreshToken
     return adminRepository.save(admin)
   }
+
+  async findOneById(adminId: string): Promise<Admin> {
+    const adminRepository = this.connection.getCustomRepository(AdminRepository)
+    const admin = await adminRepository.findOne(adminId)
+    if (!admin) {
+      throw new UnauthorizedException('Admin not found')
+    }
+    return admin
+  }
 }

@@ -1,8 +1,12 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { genSaltSync, hashSync } from 'bcryptjs';
+import { compareSync, genSaltSync, hashSync } from 'bcryptjs';
 import { AdminLoginDto, AdminSigninDto, AdminSignupDto } from 'src/admin/dto';
-import { AdminAccessToken } from 'src/admin/interfaces/admin-access-token.interface';
+import { AdminAccessToken } from 'src/admin/interfaces';
 import { AdminService } from 'src/admin/services';
 import { env } from 'src/config/env.config';
 import { SALTROUNDS } from 'src/constants/constant';
@@ -10,6 +14,7 @@ import { Admin } from 'src/entity/admin';
 import { STATUS } from 'src/enums/status.enum';
 import { AdminRepository } from 'src/repository/admin.repository';
 import { Connection } from 'typeorm';
+import { RefreshTokenDto } from '../dto';
 
 @Injectable()
 export class AuthService {
@@ -43,19 +48,22 @@ export class AuthService {
   }
   
   async signin(dto: AdminSigninDto): Promise<Admin> {
-    const { email } = dto
-    const admin = await this.validateSignin(email)
-    if (!admin) { throw new UnauthorizedException('Admin not found') }
+    const { email, password } = dto
+    const admin = await this.validateSignin(email, password)
+    if (!admin) { throw new BadRequestException('Admin not found') }
     return admin
   }
 
-  async validateSignin(email: string): Promise<Admin | null> {
+  async validateSignin(email: string, password: string): Promise<Admin | null> {
     const adminRepository = this.connection.getCustomRepository(AdminRepository)
     const admin = await adminRepository.findOne({ email: email })
 
     if (admin && admin.password) {
       if (admin.status === STATUS.INACTIVE) {
         throw new BadRequestException('Your account is currently inactive')
+      }
+      if (!compareSync(password, admin.password)) {
+        throw new ForbiddenException('Password is incorrect')
       }
       return admin
     }
@@ -71,7 +79,32 @@ export class AuthService {
     })
     const accessToken = this.jwtService.sign(payload)
     await this.adminService.updateRefreshToken(refreshToken, id)
-    return { token: accessToken, refreshToken, admin }
+    return { admin, token: accessToken, refreshToken }
+  }
+
+  async refreshToken(refreshTokenDto: RefreshTokenDto): Promise<{ accessToken: string, refreshToken: string }> {
+    const { id, refreshToken } = refreshTokenDto
+    if (!refreshToken) {
+      throw new BadRequestException('Token not null')
+    }
+
+    const tokenVerify = await this.jwtService.verifyAsync<{ email: string; exp: number }>(refreshToken, { secret: env.REFRESH_TOKEN_SECRET })
+    if (!tokenVerify || !tokenVerify.email) {
+      throw new BadRequestException('Invalid refresh token')
+    }
+
+    const admin = await this.adminService.findOneById(id)
+    if (!admin.refreshToken) {
+      throw new BadRequestException('Admin Invalid refresh token')
+    }
+
+    if (refreshToken !== admin.refreshToken) {
+      throw new BadRequestException('Invalid refresh token')
+    }
+
+    const payload = { email: admin.email, sub: admin.id }
+    const token = this.jwtService.sign(payload)
+    return { accessToken: token, refreshToken: admin.refreshToken }
   }
 
   //Authorization

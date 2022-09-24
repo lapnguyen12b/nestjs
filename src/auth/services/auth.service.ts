@@ -77,7 +77,10 @@ export class AuthService {
       secret: env.REFRESH_TOKEN_SECRET,
       expiresIn: '30d',
     })
-    const accessToken = this.jwtService.sign(payload)
+    const accessToken = this.jwtService.sign(payload, {
+      secret: env.ACCESS_TOKEN_SECRET,
+      expiresIn: '7d',
+    })
     await this.adminService.updateRefreshToken(refreshToken, id)
     return { admin, token: accessToken, refreshToken }
   }
@@ -103,8 +106,13 @@ export class AuthService {
     }
 
     const payload = { email: admin.email, sub: admin.id }
+    const newRefreshToken = this.jwtService.sign(payload, {
+      secret: env.REFRESH_TOKEN_SECRET,
+      expiresIn: '30d',
+    })
     const token = this.jwtService.sign(payload)
-    return { accessToken: token, refreshToken: admin.refreshToken }
+    await this.adminService.updateRefreshToken(refreshToken, admin.id)
+    return { accessToken: token, refreshToken: newRefreshToken }
   }
 
   //Authorization

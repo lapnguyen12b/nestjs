@@ -8,6 +8,7 @@ import { AdminModule } from './admin/admin.module';
 import { dataBaseConfig } from './config/database.config'
 import { CoreModule } from './core/core.module';
 import { AuthModule } from './auth/auth.module';
+import { PartternsModule } from './partterns/partterns.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { AuthModule } from './auth/auth.module';
     LoggerModule,
     AdminModule,
     CoreModule,
-    AuthModule
+    AuthModule,
+    PartternsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
